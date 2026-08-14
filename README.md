@@ -220,8 +220,9 @@ SELECT
       also_nested_within_function
       ) AS indented_the_same_as_opening_bracket
    ,some_other_function...
-FROM indented_the_same_as_select
+FROM indented_the_same_as_select;
 ```
+
 ```sql
 SELECT
   r.last_name,
@@ -237,6 +238,52 @@ WHERE r.last_name IN
     WHERE c.championship_date >= '2009-01-01'
       AND c.confirmed = 'Y');
 ```
+
+```sql
+WITH ranked_education AS (
+    SELECT 
+        de.CONSTITUENTDIMID
+        ,de.EDUCATIONDIMID
+        ,de.CLASSOF
+        ,de.EDUCATIONINSTITUTION
+        ,de.EDUCATIONINSTITUTIONFICECODE
+        ,de.EDUCATIONINSTITUTIONISAFFLIATED
+        ,de.EDUCATIONPROGRAM
+        ,de.EDUCATIONDEGREE
+        ,de.EDUCATIONCONSTITUENCYSTATUS
+        ,de.ISPRIMARYRECORD
+        ,de.EDUCATIONSTARTDATE
+        ,de.EDUCATIONENDDATE
+        ,ROW_NUMBER() OVER (
+            PARTITION BY de.CONSTITUENTDIMID
+            ORDER BY 
+                de.CLASSOF DESC
+                ,CASE de.EDUCATIONPROGRAM
+                    WHEN 'Graduate' THEN 1
+                    WHEN 'Undergraduate' THEN 2
+                    WHEN 'Non-Degree' THEN 3
+                    ELSE 4
+                    END
+                ,de.EDUCATIONDIMID DESC
+            ) AS rn
+    FROM BBDW.DIM_EDUCATION de
+    INNER JOIN #temp_target_population ttp ON de.CONSTITUENTDIMID = ttp.CONSTITUENTDIMID
+    WHERE 
+        EDU.EDUCATIONINSTITUTIONISAFFLIATED = 1 
+        OR EDU.EDUCATIONINSTITUTIONFICECODE = 'BUTI';
+)
+```
+
+```sql
+-- Declare and assign parameters (set values here as needed)
+DECLARE 
+    @fy smallint = 2014, -- adjust fiscal year
+    @as_of_date datetimeoffset = NULL, -- adjust manually to see PIT or keep NULL to populate YTD with FYE
+    @use_static_eoy_numbers bit = 1,
+    @limit_wbur_by_current_fy bit = 1;
+```
+
+
 
 ### Comment Indents
 
