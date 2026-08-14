@@ -40,8 +40,8 @@ and references dbt Labs' SQL style guide [SQLFluff][sqlfluff].
   `staff` instead of `employees` or `people` instead of `individuals`.
 * Quoted identifiers such as `"First Name"` or `[my_column]`—if you must use them then 
   stick to SQL-92 double quotes for portability.
-* <p style="font-weight: bold;"> Object-oriented design principles should not be applied 
-  to SQL or database structures. </p>
+* **Object-oriented design principles should not be applied 
+  to SQL or database structures.**
 
 ## Naming conventions
 
